@@ -109,12 +109,6 @@ def generate_measurements(wb, req, defaults):
         c = ws.cell(row=r, column=col_pom, value=pom_num)
         c.fill = bg; c.font = Font(name="Calibri", size=10, bold=True); c.alignment = center; c.border = thin_border()
 
-        # Description
-        if chart_data:
-            how_text = ""
-        else:
-            how_text = how if len(row_data) > 3 else ""
-
         c = ws.cell(row=r, column=col_desc, value=desc)
         c.fill = bg; c.font = Font(name="Calibri", size=10); c.alignment = left; c.border = thin_border()
 

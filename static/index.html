@@ -454,7 +454,7 @@ function addBOMRow(item = {}) {
 
 function addColorwayRow() {
   const tbody = document.getElementById('cw-tbody');
-  const n = tbody.rows.length + 1;
+  const n = tbody.rows.length;
   const alt = n % 2 === 1 ? 'bg-gray-50' : '';
   const row = document.createElement('tr');
   row.className = `border-b ${alt}`;
@@ -480,7 +480,9 @@ function buildSummary() {
     ['Designer',    document.getElementById('designer').value || 'TBD'],
     ['Factory',     document.getElementById('factory_name').value || 'TBD'],
     ['Target FOB',  document.getElementById('target_fob').value || 'TBD'],
-    ['Size Range',  document.getElementById('size_range').value || 'XS-XL'],
+    ['Size Range',  (document.getElementById('size_chart').value
+                      ? document.getElementById('size_chart').options[document.getElementById('size_chart').selectedIndex].text
+                      : document.getElementById('size_range').value) || 'XS-XL'],
   ];
   const card = document.getElementById('summary-card');
   card.innerHTML = fields.map(([k, v]) => `

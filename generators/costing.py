@@ -38,10 +38,19 @@ def generate_costing(wb, req):
 
     # ── Section A: Material Costs ──────────────────────────────────
     cur_row = _section_title(ws, cur_row, "A", "MATERIAL COSTS (Linked from BOM)")
+    has_bom = "BOM" in wb.sheetnames
+    if has_bom:
+        f_fabric = "=IFERROR(SUMIF('BOM'!B:B,\"Fabric\",'BOM'!M:M),0)"
+        f_trim   = "=IFERROR(SUMIF('BOM'!B:B,\"Trim\",'BOM'!M:M),0)"
+        f_label  = "=IFERROR(SUMIF('BOM'!B:B,\"Label\",'BOM'!M:M)+SUMIF('BOM'!B:B,\"Packaging\",'BOM'!M:M),0)"
+    else:
+        f_fabric = None
+        f_trim   = None
+        f_label  = None
     a_labels = [
-        ("A1", "Total Fabric Cost",              f"=SUMIF('BOM'!B:B,\"Fabric\",'BOM'!M:M)"),
-        ("A2", "Total Trim Cost",                f"=SUMIF('BOM'!B:B,\"Trim\",'BOM'!M:M)"),
-        ("A3", "Total Label & Packaging Cost",   f"=SUMIF('BOM'!B:B,\"Label\",'BOM'!M:M)+SUMIF('BOM'!B:B,\"Packaging\",'BOM'!M:M)"),
+        ("A1", "Total Fabric Cost",              f_fabric),
+        ("A2", "Total Trim Cost",                f_trim),
+        ("A3", "Total Label & Packaging Cost",   f_label),
         ("A4", "Total Material Cost",            "=A1_CELL+A2_CELL+A3_CELL"),
         ("A5", "Material Waste %",               req.costing.material_waste_pct, True),
         ("A6", "Material Cost incl. Waste",      "=A4_CELL*(1+A5_CELL)"),
