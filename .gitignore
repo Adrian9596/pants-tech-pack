@@ -1,6 +1,12 @@
 __pycache__/
 *.pyc
 *.pyo
+*.pyd
 .env
 *.xlsx
 .DS_Store
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
