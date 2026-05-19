@@ -14,7 +14,7 @@ from generators.measurements import generate_measurements
 from generators.construction import generate_construction
 from generators.colorways import generate_colorways
 
-app = FastAPI(title="Techpack Generator")
+app = FastAPI(title="Pants Tech Pack")
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
