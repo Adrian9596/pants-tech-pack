@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Techpack Generator</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          navy:   '#1A3A5C',
+          nblue:  '#2E6DA4',
+          norang: '#E8711A',
+        }
+      }
+    }
+  }
+</script>
+<style>
+  body { font-family: 'Calibri', 'Segoe UI', sans-serif; }
+  .step-dot.active  { background: #1A3A5C; color: white; }
+  .step-dot.done    { background: #2E6DA4; color: white; }
+  .step-dot.pending { background: #e5e7eb; color: #9ca3af; }
+  .input-cell { border-left: 3px solid #E8711A; background: #FFF8F2; }
+  .bom-row:hover { background: #f0f9ff; }
+  details > summary { cursor: pointer; user-select: none; }
+</style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+<!-- ── Top bar ──────────────────────────────────────────────────── -->
+<header class="bg-navy text-white px-6 py-4 flex items-center gap-4 shadow-lg">
+  <div>
+    <h1 class="text-xl font-bold tracking-wide">TECHPACK GENERATOR</h1>
+    <p class="text-xs text-blue-200 mt-0.5">Professional Apparel Technical Package Creator</p>
+  </div>
+</header>
+
+<!-- ── Progress bar ──────────────────────────────────────────────── -->
+<div class="bg-white border-b shadow-sm px-6 py-4">
+  <div class="max-w-4xl mx-auto flex items-center gap-3">
+    <div id="step-indicator" class="flex items-center gap-2 w-full"></div>
+  </div>
+</div>
+
+<!-- ── Main content ──────────────────────────────────────────────── -->
+<main class="max-w-4xl mx-auto px-4 py-8">
+
+  <!-- Step 1: Basic Info -->
+  <section id="step-1" class="step-panel">
+    <div class="bg-white rounded-xl shadow p-6 mb-6">
+      <h2 class="text-lg font-bold text-navy mb-4 border-b pb-2">Step 1 — Style Information</h2>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">Brand Name *</label>
+          <input id="brand_name" type="text" placeholder="e.g. Crossian" class="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-nblue focus:outline-none" value="">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">Style Name *</label>
+          <input id="style_name" type="text" placeholder="e.g. Arctic Fleece Hoodie" class="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-nblue focus:outline-none" value="">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">Style Number</label>
+          <input id="style_number" type="text" placeholder="Auto: STY-2026-001" class="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-nblue focus:outline-none" value="">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">Season</label>
+          <input id="season" type="text" placeholder="e.g. FW26, SS27" class="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-nblue focus:outline-none" value="">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">Garment Type *</label>
+          <select id="garment_type" class="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-nblue focus:outline-none bg-white">
+            <option value="knit_top">Knit Top / T-Shirt / Hoodie / Sweatshirt</option>
+            <option value="woven_top">Woven Top / Shirt / Blouse</option>
+            <option value="bottoms">Bottoms — Pants / Shorts / Skirt</option>
+            <option value="dress_jumpsuit">Dress / Jumpsuit</option>
+            <option value="outerwear">Outerwear — Jacket / Coat / Parka</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">Category</label>
+          <input id="category" type="text" placeholder="e.g. Woven Top, Knit Dress" class="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-nblue focus:outline-none" value="">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">Designer</label>
+          <input id="designer" type="text" placeholder="Designer name" class="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-nblue focus:outline-none" value="">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">Factory</label>
+          <input id="factory_name" type="text" placeholder="TBD" class="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-nblue focus:outline-none" value="">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">Fabric Content</label>
+          <input id="fabric_content" type="text" placeholder="e.g. 60% Cotton / 40% Polyester" class="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-nblue focus:outline-none" value="">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">Target FOB</label>
+          <input id="target_fob" type="text" placeholder="e.g. $12.50 USD" class="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-nblue focus:outline-none" value="">
+        </div>
+      </div>
+    </div>
+    <div class="flex justify-end">
+      <button onclick="goTo(2)" class="bg-navy text-white px-6 py-2 rounded-lg font-semibold hover:bg-nblue transition">Next: Sheet Selection →</button>
+    </div>
+  </section>
+
+  <!-- Step 2: Sheet Selection -->
+  <section id="step-2" class="step-panel hidden">
+    <div class="bg-white rounded-xl shadow p-6 mb-6">
+      <h2 class="text-lg font-bold text-navy mb-4 border-b pb-2">Step 2 — Sheet Selection</h2>
+
+      <div class="grid grid-cols-2 gap-3 mb-6">
+        <label class="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-blue-50">
+          <input type="checkbox" id="sh_cover"    checked class="w-4 h-4 accent-navy">
+          <div><div class="font-semibold text-sm">Cover Page</div><div class="text-xs text-gray-500">Brand identity & style overview</div></div>
+        </label>
+        <label class="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-blue-50">
+          <input type="checkbox" id="sh_sketch"   checked class="w-4 h-4 accent-navy">
+          <div><div class="font-semibold text-sm">Technical Sketch</div><div class="text-xs text-gray-500">Front/back flat sketch + callouts</div></div>
+        </label>
+        <label class="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-blue-50">
+          <input type="checkbox" id="sh_bom"      checked class="w-4 h-4 accent-navy">
+          <div><div class="font-semibold text-sm">Bill of Materials (BOM)</div><div class="text-xs text-gray-500">Fabrics, trims, labels, costs</div></div>
+        </label>
+        <label class="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-blue-50">
+          <input type="checkbox" id="sh_costing"  checked class="w-4 h-4 accent-navy">
+          <div><div class="font-semibold text-sm">Costing Sheet</div><div class="text-xs text-gray-500">CMT, overhead, margin, FOB</div></div>
+        </label>
+        <label class="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-blue-50">
+          <input type="checkbox" id="sh_measurements" checked class="w-4 h-4 accent-navy">
+          <div><div class="font-semibold text-sm">Measurements</div><div class="text-xs text-gray-500">Size spec table with grading</div></div>
+        </label>
+        <label class="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-blue-50">
+          <input type="checkbox" id="sh_construction" checked class="w-4 h-4 accent-navy">
+          <div><div class="font-semibold text-sm">Construction Details</div><div class="text-xs text-gray-500">Seam specs, finishing, QC</div></div>
+        </label>
+        <label class="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-blue-50">
+          <input type="checkbox" id="sh_colorways"checked class="w-4 h-4 accent-navy">
+          <div><div class="font-semibold text-sm">Colorways & Lab Dips</div><div class="text-xs text-gray-500">Color options & lab dip tracker</div></div>
+        </label>
+      </div>
+
+      <!-- Size chart selection -->
+      <div id="size-chart-section" class="border-t pt-4">
+        <h3 class="font-semibold text-sm text-gray-700 mb-3">Measurements — Size Chart / Grading Block</h3>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-1">Size Chart (optional — uses reference data)</label>
+            <select id="size_chart" class="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-nblue bg-white">
+              <option value="">Manual / Custom Size Range</option>
+              <optgroup label="Male Charts">
+                <option value="male_1">Male 1 — Numeric Flat Waist (28→54)</option>
+                <option value="male_2">Male 2 — Alpha 1/2 Elastic (S→6XL)</option>
+                <option value="male_3">Male 3 — Alpha Full Elastic (S→7XL)</option>
+                <option value="block_1">Block 1 — Flat Waist grading</option>
+                <option value="block_2">Block 2 — 1/2 Elastic grading</option>
+                <option value="block_3">Block 3 — Full Elastic grading</option>
+                <option value="block_4">Block 4 — Alpha Full Elastic (alt)</option>
+              </optgroup>
+              <optgroup label="Female Charts">
+                <option value="female_1">Female 1 — Full Elastic (XS→5X)</option>
+                <option value="female_2">Female 2 — 1/2 Elastic (XS→5X)</option>
+                <option value="female_3">Female 3 — Flat Waist 0→34W</option>
+                <option value="block_a">Block A — Female Full/1/2 Elastic</option>
+                <option value="block_b">Block B — Female Flat Waist Numeric</option>
+              </optgroup>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-1">Custom Size Range (if no chart selected)</label>
+            <input id="size_range" type="text" placeholder="e.g. XS-XL, or XS/S/M/L/XL" value="XS-XL"
+              class="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-nblue focus:outline-none">
+          </div>
+        </div>
+      </div>
+
+      <!-- Outerwear notice -->
+      <div id="outerwear-notice" class="hidden mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
+        <strong>Outerwear selected:</strong> Crossian Performance Quality Standards (stitch specs, QC checkpoints) will be automatically applied to the Construction Details sheet.
+      </div>
+    </div>
+    <div class="flex justify-between">
+      <button onclick="goTo(1)" class="border border-navy text-navy px-6 py-2 rounded-lg font-semibold hover:bg-blue-50 transition">← Back</button>
+      <button onclick="goTo(3)" class="bg-navy text-white px-6 py-2 rounded-lg font-semibold hover:bg-nblue transition">Next: Materials & Colors →</button>
+    </div>
+  </section>
+
+  <!-- Step 3: Materials & Colors -->
+  <section id="step-3" class="step-panel hidden">
+    <div class="bg-white rounded-xl shadow p-6 mb-6">
+      <h2 class="text-lg font-bold text-navy mb-4 border-b pb-2">Step 3 — Materials & Colors</h2>
+
+      <!-- BOM table -->
+      <div class="mb-6">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="font-semibold text-sm text-gray-700">Bill of Materials (BOM)</h3>
+          <button onclick="addBOMRow()" class="text-xs bg-nblue text-white px-3 py-1 rounded-lg hover:bg-navy transition">+ Add Row</button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs border-collapse">
+            <thead>
+              <tr class="bg-navy text-white">
+                <th class="px-2 py-2 text-left">Type</th>
+                <th class="px-2 py-2 text-left">Description</th>
+                <th class="px-2 py-2 text-left">Content</th>
+                <th class="px-2 py-2 text-left">Placement</th>
+                <th class="px-2 py-2 text-center w-16">Qty</th>
+                <th class="px-2 py-2 text-center w-16">Unit</th>
+                <th class="px-2 py-2 text-center w-20">Unit Cost $</th>
+                <th class="px-2 py-2 text-center w-8"></th>
+              </tr>
+            </thead>
+            <tbody id="bom-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Colorways -->
+      <div class="mb-6 border-t pt-4">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="font-semibold text-sm text-gray-700">Colorways</h3>
+          <button onclick="addColorwayRow()" class="text-xs bg-nblue text-white px-3 py-1 rounded-lg hover:bg-navy transition">+ Add Colorway</button>
+        </div>
+        <table class="w-full text-xs border-collapse">
+          <thead>
+            <tr class="bg-nblue text-white">
+              <th class="px-2 py-2 text-left">Colorway Name</th>
+              <th class="px-2 py-2 text-left">Primary Color</th>
+              <th class="px-2 py-2 text-left">Pantone #</th>
+              <th class="px-2 py-2 text-left">Secondary Color</th>
+              <th class="px-2 py-2 text-left">Pantone #</th>
+              <th class="px-2 py-2 text-center w-8"></th>
+            </tr>
+          </thead>
+          <tbody id="cw-tbody">
+            <tr class="border-b">
+              <td class="px-1 py-1"><input type="text" class="cw-name w-full border rounded px-2 py-1" value="CW1"></td>
+              <td class="px-1 py-1"><input type="text" class="cw-pri-color w-full border rounded px-2 py-1" placeholder="e.g. Navy"></td>
+              <td class="px-1 py-1"><input type="text" class="cw-pri-pms w-full border rounded px-2 py-1 input-cell" placeholder="PMS 19-4024 TCX"></td>
+              <td class="px-1 py-1"><input type="text" class="cw-sec-color w-full border rounded px-2 py-1" placeholder="e.g. White"></td>
+              <td class="px-1 py-1"><input type="text" class="cw-sec-pms w-full border rounded px-2 py-1 input-cell" placeholder="PMS 11-0601 TCX"></td>
+              <td class="px-1 py-1 text-center"><button onclick="this.closest('tr').remove()" class="text-red-400 hover:text-red-600 text-lg font-bold">×</button></td>
+            </tr>
+            <tr class="border-b bg-gray-50">
+              <td class="px-1 py-1"><input type="text" class="cw-name w-full border rounded px-2 py-1" value="CW2"></td>
+              <td class="px-1 py-1"><input type="text" class="cw-pri-color w-full border rounded px-2 py-1" placeholder="e.g. Black"></td>
+              <td class="px-1 py-1"><input type="text" class="cw-pri-pms w-full border rounded px-2 py-1 input-cell" placeholder="PMS 19-0303 TCX"></td>
+              <td class="px-1 py-1"><input type="text" class="cw-sec-color w-full border rounded px-2 py-1"></td>
+              <td class="px-1 py-1"><input type="text" class="cw-sec-pms w-full border rounded px-2 py-1 input-cell"></td>
+              <td class="px-1 py-1 text-center"><button onclick="this.closest('tr').remove()" class="text-red-400 hover:text-red-600 text-lg font-bold">×</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Costing inputs (collapsible) -->
+      <details class="border-t pt-4">
+        <summary class="font-semibold text-sm text-gray-700 py-1">
+          Costing Inputs <span class="text-xs text-gray-400 font-normal">(optional — leave blank if unknown)</span>
+        </summary>
+        <div class="mt-3 grid grid-cols-3 gap-3 text-sm">
+          <div class="input-cell rounded-lg p-3">
+            <label class="block text-xs font-semibold text-gray-600 mb-1">Cut Cost ($)</label>
+            <input id="cost_cut" type="number" step="0.01" placeholder="0.00" class="w-full border rounded px-2 py-1 text-xs">
+          </div>
+          <div class="input-cell rounded-lg p-3">
+            <label class="block text-xs font-semibold text-gray-600 mb-1">Make / Sewing ($)</label>
+            <input id="cost_make" type="number" step="0.01" placeholder="0.00" class="w-full border rounded px-2 py-1 text-xs">
+          </div>
+          <div class="input-cell rounded-lg p-3">
+            <label class="block text-xs font-semibold text-gray-600 mb-1">Trim / Finishing ($)</label>
+            <input id="cost_trim" type="number" step="0.01" placeholder="0.00" class="w-full border rounded px-2 py-1 text-xs">
+          </div>
+          <div class="input-cell rounded-lg p-3">
+            <label class="block text-xs font-semibold text-gray-600 mb-1">Washing / Treatment ($)</label>
+            <input id="cost_wash" type="number" step="0.01" placeholder="0.00" class="w-full border rounded px-2 py-1 text-xs">
+          </div>
+          <div class="input-cell rounded-lg p-3">
+            <label class="block text-xs font-semibold text-gray-600 mb-1">Testing / Compliance ($)</label>
+            <input id="cost_test" type="number" step="0.01" placeholder="0.00" class="w-full border rounded px-2 py-1 text-xs">
+          </div>
+          <div class="input-cell rounded-lg p-3">
+            <label class="block text-xs font-semibold text-gray-600 mb-1">Freight to Port ($)</label>
+            <input id="cost_freight" type="number" step="0.01" placeholder="0.00" class="w-full border rounded px-2 py-1 text-xs">
+          </div>
+          <div class="bg-gray-50 border rounded-lg p-3">
+            <label class="block text-xs font-semibold text-gray-600 mb-1">Material Waste % <span class="text-gray-400">(default 5%)</span></label>
+            <input id="cost_waste_pct" type="number" step="0.1" value="5" min="0" max="100" class="w-full border rounded px-2 py-1 text-xs">
+          </div>
+          <div class="bg-gray-50 border rounded-lg p-3">
+            <label class="block text-xs font-semibold text-gray-600 mb-1">Factory Overhead % <span class="text-gray-400">(default 10%)</span></label>
+            <input id="cost_overhead_pct" type="number" step="0.1" value="10" min="0" max="100" class="w-full border rounded px-2 py-1 text-xs">
+          </div>
+          <div class="bg-gray-50 border rounded-lg p-3">
+            <label class="block text-xs font-semibold text-gray-600 mb-1">Factory Profit Margin % <span class="text-gray-400">(default 12%)</span></label>
+            <input id="cost_margin_pct" type="number" step="0.1" value="12" min="0" max="100" class="w-full border rounded px-2 py-1 text-xs">
+          </div>
+          <div class="input-cell rounded-lg p-3">
+            <label class="block text-xs font-semibold text-gray-600 mb-1">Target Wholesale ($)</label>
+            <input id="cost_wholesale" type="number" step="0.01" placeholder="0.00" class="w-full border rounded px-2 py-1 text-xs">
+          </div>
+          <div class="input-cell rounded-lg p-3">
+            <label class="block text-xs font-semibold text-gray-600 mb-1">Target Retail ($)</label>
+            <input id="cost_retail" type="number" step="0.01" placeholder="0.00" class="w-full border rounded px-2 py-1 text-xs">
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <div class="flex justify-between">
+      <button onclick="goTo(2)" class="border border-navy text-navy px-6 py-2 rounded-lg font-semibold hover:bg-blue-50 transition">← Back</button>
+      <button onclick="goTo(4)" class="bg-navy text-white px-6 py-2 rounded-lg font-semibold hover:bg-nblue transition">Next: Review & Generate →</button>
+    </div>
+  </section>
+
+  <!-- Step 4: Review & Generate -->
+  <section id="step-4" class="step-panel hidden">
+    <div class="bg-white rounded-xl shadow p-6 mb-6">
+      <h2 class="text-lg font-bold text-navy mb-4 border-b pb-2">Step 4 — Review & Generate</h2>
+      <div id="summary-card" class="grid grid-cols-2 gap-4 text-sm mb-6"></div>
+      <div id="sheets-summary" class="mb-6"></div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow p-6 mb-6 text-center">
+      <p class="text-gray-600 mb-4 text-sm">Your tech pack will be generated as a multi-sheet <strong>.xlsx</strong> workbook.</p>
+      <button id="generate-btn" onclick="generatePack()" class="bg-norang text-white px-8 py-3 rounded-xl font-bold text-lg hover:bg-orange-600 transition shadow-md">
+        Generate Tech Pack
+      </button>
+      <div id="gen-loading" class="hidden mt-4">
+        <div class="inline-flex items-center gap-2 text-gray-600">
+          <svg class="animate-spin h-5 w-5 text-nblue" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+          </svg>
+          <span>Generating your tech pack...</span>
+        </div>
+      </div>
+      <div id="gen-error" class="hidden mt-4 text-red-600 text-sm"></div>
+    </div>
+
+    <div class="flex justify-between">
+      <button onclick="goTo(3)" class="border border-navy text-navy px-6 py-2 rounded-lg font-semibold hover:bg-blue-50 transition">← Back</button>
+    </div>
+  </section>
+
+</main>
+
+<script>
+// ── State ─────────────────────────────────────────────────────────
+let currentStep = 1;
+let bomDefaults = [];
+
+const STEPS = [
+  { id: 1, label: "Style Info" },
+  { id: 2, label: "Sheets" },
+  { id: 3, label: "Materials" },
+  { id: 4, label: "Generate" },
+];
+
+// ── Init ──────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  renderStepBar();
+  showStep(1);
+
+  // Load defaults when garment type changes
+  document.getElementById('garment_type').addEventListener('change', async (e) => {
+    await loadGarmentDefaults(e.target.value);
+    const notice = document.getElementById('outerwear-notice');
+    notice.classList.toggle('hidden', e.target.value !== 'outerwear');
+  });
+
+  // Initial load
+  loadGarmentDefaults(document.getElementById('garment_type').value);
+});
+
+// ── Step navigation ───────────────────────────────────────────────
+function goTo(n) {
+  currentStep = n;
+  showStep(n);
+  if (n === 4) buildSummary();
+}
+
+function showStep(n) {
+  document.querySelectorAll('.step-panel').forEach(el => el.classList.add('hidden'));
+  document.getElementById(`step-${n}`).classList.remove('hidden');
+  renderStepBar();
+  window.scrollTo(0, 0);
+}
+
+function renderStepBar() {
+  const container = document.getElementById('step-indicator');
+  container.innerHTML = STEPS.map((s, i) => {
+    let cls = s.id < currentStep ? 'done' : s.id === currentStep ? 'active' : 'pending';
+    return `
+      ${i > 0 ? `<div class="flex-1 h-0.5 ${s.id <= currentStep ? 'bg-nblue' : 'bg-gray-200'}"></div>` : ''}
+      <div class="flex flex-col items-center gap-1 shrink-0">
+        <div class="step-dot w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${cls}">${s.id}</div>
+        <span class="text-xs font-semibold ${cls === 'active' ? 'text-navy' : 'text-gray-400'} hidden sm:block">${s.label}</span>
+      </div>
+    `;
+  }).join('');
+}
+
+// ── BOM ───────────────────────────────────────────────────────────
+async function loadGarmentDefaults(gType) {
+  try {
+    const res = await fetch(`/api/defaults/${gType}`);
+    const data = await res.json();
+    bomDefaults = data.bom || [];
+    renderBOM(bomDefaults);
+  } catch(e) { console.error(e); }
+}
+
+function renderBOM(items) {
+  const tbody = document.getElementById('bom-tbody');
+  tbody.innerHTML = '';
+  items.forEach((item, i) => addBOMRow(item));
+}
+
+function addBOMRow(item = {}) {
+  const tbody = document.getElementById('bom-tbody');
+  const i = tbody.rows.length;
+  const alt = i % 2 === 1 ? 'bg-gray-50' : '';
+  const typeColors = {
+    Fabric: 'bg-blue-50', Trim: 'bg-green-50', Label: 'bg-yellow-50', Packaging: 'bg-yellow-50'
+  };
+  const tc = typeColors[item.item_type] || '';
+  const row = document.createElement('tr');
+  row.className = `bom-row border-b ${alt}`;
+  row.innerHTML = `
+    <td class="px-1 py-1">
+      <select class="bom-type w-full border rounded px-1 py-1 text-xs ${tc}">
+        ${['Fabric','Trim','Label','Packaging'].map(t =>
+          `<option ${(item.item_type||'Fabric')===t?'selected':''}>${t}</option>`).join('')}
+      </select>
+    </td>
+    <td class="px-1 py-1"><input type="text" class="bom-desc w-full border rounded px-2 py-1 text-xs" value="${item.description||''}"></td>
+    <td class="px-1 py-1"><input type="text" class="bom-content w-full border rounded px-2 py-1 text-xs" value="${item.content||''}"></td>
+    <td class="px-1 py-1"><input type="text" class="bom-placement w-full border rounded px-2 py-1 text-xs" value="${item.placement||''}"></td>
+    <td class="px-1 py-1"><input type="number" class="bom-qty w-full border rounded px-1 py-1 text-xs text-center" value="${item.qty||1}" step="0.1" min="0"></td>
+    <td class="px-1 py-1">
+      <select class="bom-unit w-full border rounded px-1 py-1 text-xs">
+        ${['yds','m','pcs','sets','lbs','kg'].map(u =>
+          `<option ${(item.unit||'yds')===u?'selected':''}>${u}</option>`).join('')}
+      </select>
+    </td>
+    <td class="px-1 py-1"><input type="number" class="bom-cost w-full border rounded px-1 py-1 text-xs text-center input-cell" placeholder="—" step="0.01" min="0" value="${item.unit_cost!=null?item.unit_cost:''}"></td>
+    <td class="px-1 py-1 text-center"><button onclick="this.closest('tr').remove()" class="text-red-400 hover:text-red-600 text-lg font-bold leading-none">×</button></td>
+  `;
+  tbody.appendChild(row);
+}
+
+function addColorwayRow() {
+  const tbody = document.getElementById('cw-tbody');
+  const n = tbody.rows.length + 1;
+  const alt = n % 2 === 1 ? 'bg-gray-50' : '';
+  const row = document.createElement('tr');
+  row.className = `border-b ${alt}`;
+  row.innerHTML = `
+    <td class="px-1 py-1"><input type="text" class="cw-name w-full border rounded px-2 py-1 text-xs" value="CW${n}"></td>
+    <td class="px-1 py-1"><input type="text" class="cw-pri-color w-full border rounded px-2 py-1 text-xs" placeholder="Color name"></td>
+    <td class="px-1 py-1"><input type="text" class="cw-pri-pms w-full border rounded px-2 py-1 text-xs input-cell" placeholder="PMS ###"></td>
+    <td class="px-1 py-1"><input type="text" class="cw-sec-color w-full border rounded px-2 py-1 text-xs"></td>
+    <td class="px-1 py-1"><input type="text" class="cw-sec-pms w-full border rounded px-2 py-1 text-xs input-cell"></td>
+    <td class="px-1 py-1 text-center"><button onclick="this.closest('tr').remove()" class="text-red-400 hover:text-red-600 text-lg font-bold">×</button></td>
+  `;
+  tbody.appendChild(row);
+}
+
+// ── Summary (Step 4) ──────────────────────────────────────────────
+function buildSummary() {
+  const fields = [
+    ['Brand',       document.getElementById('brand_name').value || '[Brand Name]'],
+    ['Style Name',  document.getElementById('style_name').value || '[Style Name]'],
+    ['Style #',     document.getElementById('style_number').value || 'Auto-generated'],
+    ['Season',      document.getElementById('season').value || 'TBD'],
+    ['Garment',     document.getElementById('garment_type').options[document.getElementById('garment_type').selectedIndex].text],
+    ['Designer',    document.getElementById('designer').value || 'TBD'],
+    ['Factory',     document.getElementById('factory_name').value || 'TBD'],
+    ['Target FOB',  document.getElementById('target_fob').value || 'TBD'],
+    ['Size Range',  document.getElementById('size_range').value || 'XS-XL'],
+  ];
+  const card = document.getElementById('summary-card');
+  card.innerHTML = fields.map(([k, v]) => `
+    <div class="p-3 border rounded-lg">
+      <div class="text-xs font-semibold text-gray-500">${k}</div>
+      <div class="text-sm font-medium text-navy mt-0.5">${v}</div>
+    </div>
+  `).join('');
+
+  const sheetMap = {
+    sh_cover: 'Cover Page', sh_sketch: 'Technical Sketch', sh_bom: 'Bill of Materials',
+    sh_costing: 'Costing Sheet', sh_measurements: 'Measurements',
+    sh_construction: 'Construction Details', sh_colorways: 'Colorways & Lab Dips',
+  };
+  const selected = Object.entries(sheetMap).filter(([id]) => document.getElementById(id).checked).map(([, label]) => label);
+  document.getElementById('sheets-summary').innerHTML = `
+    <p class="text-sm font-semibold text-gray-700 mb-2">Sheets to generate (${selected.length}/7):</p>
+    <div class="flex flex-wrap gap-2">
+      ${selected.map(s => `<span class="bg-nblue text-white text-xs px-3 py-1 rounded-full">${s}</span>`).join('')}
+    </div>
+  `;
+}
+
+// ── Generate ──────────────────────────────────────────────────────
+async function generatePack() {
+  const btn  = document.getElementById('generate-btn');
+  const load = document.getElementById('gen-loading');
+  const err  = document.getElementById('gen-error');
+
+  btn.disabled = true; btn.classList.add('opacity-50');
+  load.classList.remove('hidden');
+  err.classList.add('hidden');
+
+  try {
+    const payload = buildPayload();
+    const res = await fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      let msg;
+      try {
+        const detail = await res.json();
+        msg = detail.detail || `Server error ${res.status}`;
+      } catch {
+        msg = `Server error ${res.status}`;
+      }
+      throw new Error(msg);
+    }
+
+    const blob = await res.blob();
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    const name = (document.getElementById('style_name').value || 'StyleName').replace(/\s+/g, '_');
+    a.href = url; a.download = `${name}_techpack.xlsx`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+  } catch (e) {
+    err.textContent = `Error: ${e.message}`;
+    err.classList.remove('hidden');
+  } finally {
+    btn.disabled = false; btn.classList.remove('opacity-50');
+    load.classList.add('hidden');
+  }
+}
+
+function buildPayload() {
+  // BOM rows
+  const bomRows = [...document.querySelectorAll('#bom-tbody tr')].map(tr => ({
+    item_type:   tr.querySelector('.bom-type')?.value || 'Fabric',
+    description: tr.querySelector('.bom-desc')?.value || '',
+    content:     tr.querySelector('.bom-content')?.value || '',
+    placement:   tr.querySelector('.bom-placement')?.value || '',
+    qty:         parseFloat(tr.querySelector('.bom-qty')?.value) || 1,
+    unit:        tr.querySelector('.bom-unit')?.value || 'yds',
+    unit_cost:   tr.querySelector('.bom-cost')?.value ? parseFloat(tr.querySelector('.bom-cost').value) : null,
+    supplier:    'TBD', color: '', pantone: '', width_size: '', lead_time: 0, notes: '',
+  }));
+
+  // Colorways
+  const cwRows = [...document.querySelectorAll('#cw-tbody tr')].map(tr => ({
+    name:             tr.querySelector('.cw-name')?.value || '',
+    primary_color:    tr.querySelector('.cw-pri-color')?.value || '',
+    primary_pantone:  tr.querySelector('.cw-pri-pms')?.value || '',
+    secondary_color:  tr.querySelector('.cw-sec-color')?.value || '',
+    secondary_pantone:tr.querySelector('.cw-sec-pms')?.value || '',
+    accent_color: '', accent_pantone: '',
+  }));
+
+  // Sheets
+  const sheetMap = {
+    sh_cover: 'cover', sh_sketch: 'sketch', sh_bom: 'bom',
+    sh_costing: 'costing', sh_measurements: 'measurements',
+    sh_construction: 'construction', sh_colorways: 'colorways',
+  };
+  const sheets = Object.entries(sheetMap)
+    .filter(([id]) => document.getElementById(id).checked)
+    .map(([, key]) => key);
+
+  const pct = v => v ? parseFloat(v) / 100 : null;
+  const val = id => { const v = document.getElementById(id)?.value; return v ? parseFloat(v) : null; };
+
+  return {
+    brand_name:    document.getElementById('brand_name').value || '[Brand Name]',
+    style_name:    document.getElementById('style_name').value || '[Style Name]',
+    style_number:  document.getElementById('style_number').value || '',
+    season:        document.getElementById('season').value || '',
+    designer:      document.getElementById('designer').value || 'TBD',
+    garment_type:  document.getElementById('garment_type').value,
+    category:      document.getElementById('category').value || '',
+    fabric_content:document.getElementById('fabric_content').value || '',
+    size_range:    document.getElementById('size_range').value || 'XS-XL',
+    target_fob:    document.getElementById('target_fob').value || 'TBD',
+    factory_name:  document.getElementById('factory_name').value || 'TBD',
+    sheets,
+    size_chart:    document.getElementById('size_chart').value || '',
+    colorways:     cwRows,
+    bom_items:     bomRows,
+    costing: {
+      cut_cost:            val('cost_cut'),
+      make_cost:           val('cost_make'),
+      trim_finishing:      val('cost_trim'),
+      washing_treatment:   val('cost_wash'),
+      testing_compliance:  val('cost_test'),
+      freight_factory:     val('cost_freight'),
+      embroidery_print:    null,
+      hang_tag_ticketing:  null,
+      export_docs:         null,
+      local_transport:     null,
+      material_waste_pct:  pct(document.getElementById('cost_waste_pct').value) ?? 0.05,
+      overhead_pct:        pct(document.getElementById('cost_overhead_pct').value) ?? 0.10,
+      margin_pct:          pct(document.getElementById('cost_margin_pct').value) ?? 0.12,
+      target_wholesale:    val('cost_wholesale'),
+      target_retail:       val('cost_retail'),
+    },
+  };
+}
+</script>
+</body>
+</html>
