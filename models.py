@@ -1,7 +1,10 @@
 from __future__ import annotations
 from typing import List, Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from datetime import datetime
+
+VALID_GARMENT_TYPES = {"knit_top", "woven_top", "bottoms", "dress_jumpsuit", "outerwear"}
+VALID_SHEETS = {"all", "cover", "sketch", "bom", "costing", "measurements", "construction", "colorways"}
 
 
 class ColorwayInput(BaseModel):
@@ -56,6 +59,25 @@ class TechPackRequest(BaseModel):
     designer: str = "TBD"
     garment_type: str = "knit_top"
     category: str = ""
+
+    @field_validator("garment_type")
+    @classmethod
+    def validate_garment_type(cls, v: str) -> str:
+        if v not in VALID_GARMENT_TYPES:
+            raise ValueError(
+                f"Invalid garment_type '{v}'. Must be one of: {sorted(VALID_GARMENT_TYPES)}"
+            )
+        return v
+
+    @field_validator("sheets")
+    @classmethod
+    def validate_sheets(cls, v: List[str]) -> List[str]:
+        invalid = set(v) - VALID_SHEETS
+        if invalid:
+            raise ValueError(
+                f"Unknown sheet(s): {sorted(invalid)}. Valid values: {sorted(VALID_SHEETS)}"
+            )
+        return v
     fabric_content: str = ""
     size_range: str = "XS-XL"
     target_fob: str = "TBD"

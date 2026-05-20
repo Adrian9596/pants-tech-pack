@@ -40,48 +40,53 @@ def garment_defaults(garment_type: str):
 
 @app.post("/api/generate")
 def generate(req: TechPackRequest):
-    if not req.garment_type:
-        raise HTTPException(status_code=422, detail="garment_type is required")
+    try:
+        defaults = get_defaults(req.garment_type)
+        wb = Workbook()
+        if "Sheet" in wb.sheetnames:
+            del wb["Sheet"]
 
-    defaults = get_defaults(req.garment_type)
-    wb = Workbook()
-    # Remove default sheet
-    if "Sheet" in wb.sheetnames:
-        del wb["Sheet"]
+        if req.should_generate("cover"):
+            generate_cover(wb, req)
 
-    if req.should_generate("cover"):
-        generate_cover(wb, req)
+        if req.should_generate("sketch"):
+            generate_sketch(wb, req, defaults)
 
-    if req.should_generate("sketch"):
-        generate_sketch(wb, req, defaults)
+        if req.should_generate("bom"):
+            generate_bom(wb, req, defaults)
 
-    if req.should_generate("bom"):
-        generate_bom(wb, req, defaults)
+        if req.should_generate("costing"):
+            generate_costing(wb, req)
 
-    if req.should_generate("costing"):
-        generate_costing(wb, req)
+        if req.should_generate("measurements"):
+            generate_measurements(wb, req, defaults)
 
-    if req.should_generate("measurements"):
-        generate_measurements(wb, req, defaults)
+        if req.should_generate("construction"):
+            generate_construction(wb, req, defaults)
 
-    if req.should_generate("construction"):
-        generate_construction(wb, req, defaults)
+        if req.should_generate("colorways"):
+            generate_colorways(wb, req)
 
-    if req.should_generate("colorways"):
-        generate_colorways(wb, req)
+        if not wb.sheetnames:
+            raise HTTPException(status_code=422, detail="No sheets selected")
 
-    if not wb.sheetnames:
-        raise HTTPException(status_code=422, detail="No sheets selected")
+        buf = io.BytesIO()
+        wb.save(buf)
+        buf.seek(0)
 
-    buf = io.BytesIO()
-    wb.save(buf)
-    buf.seek(0)
+        safe_name = req.style_name.replace(" ", "_").replace("/", "-") or "StyleName"
+        filename  = f"{safe_name}_techpack.xlsx"
 
-    safe_name = req.style_name.replace(" ", "_").replace("/", "-") or "StyleName"
-    filename  = f"{safe_name}_techpack.xlsx"
+        return Response(
+            content=buf.read(),
+            media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+        )
 
-    return Response(
-        content=buf.read(),
-        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
-    )
+    except HTTPException:
+        raise  # pass through 422s and other intentional HTTP errors unchanged
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Generation failed: {type(e).__name__}: {e}",
+        )
